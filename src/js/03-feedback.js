@@ -1,19 +1,21 @@
-const throttle = require("lodash.throttle");
+import '../css/common.css';
+import '../css/03-feedback.css';
+const throttle = require('lodash.throttle');
 
-const STORAGE_KEY = "feedback-form-state";
+const STORAGE_KEY = 'feedback-form-state';
 const refs = {
-  form: document.querySelector(".feedback-form"),
-  textarea: document.querySelector(".feedback-form textarea"),
-  input: document.querySelector("input"),
+  form: document.querySelector('.feedback-form'),
+  textarea: document.querySelector('.feedback-form textarea'),
+  input: document.querySelector('input'),
 };
 
 let formData = {};
 
-populateTexrarea();
+populateTextarea();
 
-refs.form.addEventListener("input", throttle(onTextareaInput, 500));
+refs.form.addEventListener('input', throttle(onTextareaInput, 500));
 
-refs.form.addEventListener("submit", onFormSubmit);
+refs.form.addEventListener('submit', onFormSubmit);
 
 function onFormSubmit(e) {
   e.preventDefault();
@@ -29,21 +31,14 @@ function onTextareaInput(e) {
   localStorage.setItem(STORAGE_KEY, stringifiedData);
 }
 
-// function populateTexrarea() {
-//   const savedMessage = JSON.parse(localStorage.getItem(STORAGE_KEY));
-//   if (savedMessage === null) {
-//     return;
-//   }
-//   refs.textarea.value = savedMessage["message"] || "";
-//   refs.input.value = savedMessage["email"] || "";
-// }
+function populateTextarea() {
+  let savedMessage = localStorage.getItem(STORAGE_KEY);
 
-// function populateTexrarea() {
-//   let persistedFilters = localStorage.getItem(STORAGE_KEY);
-//   if (persistedFilters) {
-//     persistedFilters = JSON.parse(persistedFilters);
-//     Object.entries(persistedFilters).forEach(([name, value]) => {
-//       filterForm.elements[name].value = value;
-//     });
-//   }
-// }
+  if (savedMessage) {
+    savedMessage = JSON.parse(savedMessage);
+    Object.entries(savedMessage).forEach(([name, value]) => {
+      formData[name] = value;
+      refs.form.elements[name].value = value;
+    });
+  }
+}
